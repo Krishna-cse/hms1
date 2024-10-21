@@ -49,9 +49,10 @@ public class userController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDto dto){
-        boolean status = userService.verifyLogin(dto);
-        if(status){
-            return new ResponseEntity<>("user loggedin",HttpStatus.OK);
+        String token = userService.verifyLogin(dto);
+        if(token!=null){
+
+            return new ResponseEntity<>(token,HttpStatus.OK);
         }else {
             return new ResponseEntity<>("Invalid username/password",HttpStatus.FORBIDDEN);
         }

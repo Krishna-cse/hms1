@@ -16,14 +16,21 @@ public class UserService {
         this.appUserRepository = appUserRepository;
     }
 
-    public boolean verifyLogin(LoginDto dto){
+    public String verifyLogin(LoginDto dto){
         Optional<AppUser> opUser = appUserRepository.findByUsername(dto.getUsername());
         if(opUser.isPresent()){
             AppUser appUser = opUser.get();
-            return BCrypt.checkpw(dto.getPassword(),appUser.getPassword());
+            if(BCrypt.checkpw(dto.getPassword(),appUser.getPassword())){
+                //generate token
+                String token;
+                token = JWTService.generateToken(appUser.getUsername());
+                return token;
+
+            }
 
         }else {
-            return false;
+            return null;
         }
+        return null;
     }
 }
