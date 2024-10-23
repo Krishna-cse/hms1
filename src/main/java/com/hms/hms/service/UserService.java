@@ -11,9 +11,11 @@ import java.util.Optional;
 @Service
 public class UserService {
     private AppUserRepository appUserRepository;
+    private JWTService jwtService;
 
-    public UserService(AppUserRepository appUserRepository) {
+    public UserService(AppUserRepository appUserRepository, JWTService jwtService) {
         this.appUserRepository = appUserRepository;
+        this.jwtService = jwtService;
     }
 
     public String verifyLogin(LoginDto dto){
@@ -22,8 +24,7 @@ public class UserService {
             AppUser appUser = opUser.get();
             if(BCrypt.checkpw(dto.getPassword(),appUser.getPassword())){
                 //generate token
-                String token;
-                token = JWTService.generateToken(appUser.getUsername());
+                String token = jwtService.generateToken(appUser.getUsername());
                 return token;
 
             }

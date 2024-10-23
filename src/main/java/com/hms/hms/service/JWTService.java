@@ -5,7 +5,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
@@ -18,11 +17,13 @@ public class JWTService {
     @Value("${jwt.algorithm.key}")
     private String algorithmKey;
 
+
     @Value("${jwt.issuer}")
-    private static String issuer;
+    private  String issuer;
+
 
     @Value("${jwt.expiry.duration}")
-    private static int expiryTime;
+    private int expiryTime;
 
     private static Algorithm algorithm;
 
@@ -32,7 +33,7 @@ public class JWTService {
         algorithm = Algorithm.HMAC256(algorithmKey);
     }
 
-    public static String generateToken(String username){
+    public String generateToken(String username){
         return JWT.create()
                 .withClaim("name",username)
                 .withExpiresAt(new Date(System.currentTimeMillis()+expiryTime))
