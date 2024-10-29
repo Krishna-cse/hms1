@@ -8,8 +8,9 @@ public class A {
     public static void main(String[] args) {
 //        PasswordEncoder en = new BCryptPasswordEncoder();
 //        System.out.println(en.encode("testing"));
-
+//
         String testing = BCrypt.hashpw("testing", BCrypt.gensalt(10));
         System.out.println(testing);
+
     }
 }
