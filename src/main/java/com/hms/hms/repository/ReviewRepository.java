@@ -1,7 +1,20 @@
 package com.hms.hms.repository;
 
+import com.hms.hms.entity.AppUser;
+import com.hms.hms.entity.Property;
 import com.hms.hms.entity.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface ReviewRepository extends JpaRepository<Review, Long> {
+    //findByUserId
+    List<Review> findByAppUser(AppUser userId);
+
+    //findByUserAndProperty
+    boolean existsByAppUserAndProperty(AppUser user, Property property);
+
+
+
+
 }

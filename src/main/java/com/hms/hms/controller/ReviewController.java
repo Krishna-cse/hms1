@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -25,8 +26,12 @@ public class ReviewController {
 
     //http:localhost:8080/api/v1/review?propertyId=1
     @PostMapping
-    public ResponseEntity<Review> write(@RequestBody Review review, @RequestParam long propertyId, @AuthenticationPrincipal AppUser user){
+    public ResponseEntity<?> write(@RequestBody Review review, @RequestParam long propertyId, @AuthenticationPrincipal AppUser user){
+
         Property property = propertyRepository.findById(propertyId).get();
+        if(reviewRepository.existsByAppUserAndProperty(user,property)){
+            return new ResponseEntity<>("Review already exists for this property",HttpStatus.OK);
+        }
         review.setProperty(property);
         review.setAppUser(user);
 
@@ -35,4 +40,12 @@ public class ReviewController {
         return new ResponseEntity<>(savedReview, HttpStatus.OK);
 
     }
+
+    @GetMapping("/user/reviews")
+    public ResponseEntity<List<Review>> getUserReviews(@AuthenticationPrincipal AppUser user){
+        List<Review> reviews = reviewRepository.findByAppUser(user);
+        return new ResponseEntity<>(reviews, HttpStatus.OK);
+    }
+    //http:localhost:8080/api/v1/review/property/1
+
 }
